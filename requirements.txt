@@ -1,7 +1,5 @@
 Flask==2.2.3
-numpy==2.4.6
+numpy
 opencv_contrib_python==4.11.0.86
-opencv_python==4.11.0.86
-opencv_python_headless==4.12.0.88
 ultralytics==8.4.52
 Werkzeug==2.2.2
