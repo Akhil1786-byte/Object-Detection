@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+    <title>
+        AI Video Analytics
+    </title>
+
+    <style>
+
+        body {
+
+            background: #0f172a;
+
+            color: white;
+
+            text-align: center;
+
+            font-family: Arial;
+
+            margin: 0;
+        }
+
+        h1 {
+
+            color: cyan;
+
+            margin-top: 20px;
+        }
+
+        /* =====================================
+           UPLOAD SECTION
+        ====================================== */
+
+        .upload-box {
+
+            margin-top: 30px;
+        }
+
+        input {
+
+            padding: 10px;
+
+            border-radius: 6px;
+        }
+
+        button {
+
+            padding: 12px 22px;
+
+            background: cyan;
+
+            border: none;
+
+            font-size: 18px;
+
+            cursor: pointer;
+
+            border-radius: 8px;
+
+            font-weight: bold;
+        }
+
+        button:hover {
+
+            background: #00bcd4;
+        }
+
+        /* =====================================
+           VIDEO
+        ====================================== */
+
+        .video-box {
+
+            margin-top: 30px;
+        }
+
+        img {
+
+            width: 90%;
+
+            border: 4px solid cyan;
+
+            border-radius: 10px;
+        }
+
+        /* =====================================
+           STATUS MESSAGE
+        ====================================== */
+
+        .status {
+
+            margin-top: 25px;
+
+            font-size: 30px;
+
+            color: #22c55e;
+
+            font-weight: bold;
+
+            display: none;
+
+            animation: fadeIn 1s ease;
+        }
+
+        /* =====================================
+           LOADER
+        ====================================== */
+
+        .loader {
+
+            margin-top: 20px;
+
+            font-size: 22px;
+
+            color: yellow;
+
+            display: none;
+        }
+
+        /* =====================================
+           ANIMATION
+        ====================================== */
+
+        @keyframes fadeIn {
+
+            from {
+
+                opacity: 0;
+            }
+
+            to {
+
+                opacity: 1;
+            }
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+    <h1>
+        Live Object Detection
+    </h1>
+
+    <!-- =====================================
+         UPLOAD FORM
+    ====================================== -->
+
+    <div class="upload-box">
+
+        <form
+
+            method="POST"
+
+            enctype="multipart/form-data"
+
+            id="uploadForm"
+
+        >
+
+            <input
+
+                type="file"
+
+                name="video"
+
+                required
+
+            >
+
+            <button type="submit">
+
+                Upload Video
+
+            </button>
+
+        </form>
+
+        <!-- =================================
+             PROCESSING MESSAGE
+        ================================== -->
+
+        <div
+
+            class="loader"
+
+            id="loader"
+
+        >
+
+            ⏳ Processing Video...
+
+        </div>
+
+    </div>
+
+    <!-- =====================================
+         SHOW VIDEO
+    ====================================== -->
+
+    {% if video_uploaded %}
+
+    <div class="video-box">
+
+        <img
+
+            id="videoStream"
+
+            src="{{ url_for('video_feed') }}?t={{ timestamp }}"
+
+        >
+
+    </div>
+
+    <!-- =====================================
+         COMPLETED MESSAGE
+    ====================================== -->
+
+    <div
+
+        class="status"
+
+        id="statusMessage"
+
+    >
+
+        ✅ Video Processing Completed
+
+    </div>
+
+    {% endif %}
+
+    <!-- =====================================
+         JAVASCRIPT
+    ====================================== -->
+
+    <script>
+
+        // ==================================
+        // SHOW LOADER ON UPLOAD
+        // ==================================
+
+        const uploadForm = document.getElementById(
+            "uploadForm"
+        );
+
+        const loader = document.getElementById(
+            "loader"
+        );
+
+        uploadForm.addEventListener(
+
+            "submit",
+
+            function(){
+
+                loader.style.display = "block";
+            }
+
+        );
+
+        // ==================================
+        // VIDEO STREAM
+        // ==================================
+
+        const videoStream = document.getElementById(
+            "videoStream"
+        );
+
+        if(videoStream){
+
+            // ==============================
+            // STREAM STARTED
+            // ==============================
+
+            videoStream.onload = function(){
+
+                console.log(
+                    "Streaming Started"
+                );
+
+                loader.style.display = "none";
+            };
+
+            // ==============================
+            // STREAM FINISHED
+            // ==============================
+
+            videoStream.onerror = function(){
+
+                console.log(
+                    "Video Processing Completed"
+                );
+
+                // ==========================
+                // SHOW COMPLETION MESSAGE
+                // ==========================
+
+                const statusMessage = document.getElementById(
+                    "statusMessage"
+                );
+
+                statusMessage.style.display = "block";
+
+                statusMessage.innerHTML =
+                    "✅ Video Processing Completed";
+            };
+        }
+
+    </script>
+
+</body>
+
+</html>
